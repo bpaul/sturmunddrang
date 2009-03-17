@@ -120,7 +120,7 @@ class Bouncer {
     strokeWeight(strokeVar);
     stroke(gray, gray/2, 31);
     //line(xPos, yPos, xOld, yOld);
-    quad(xPos, yPos, xPos + 2, yPos +2, xOld, yOld, xOld +2, yOld +2);
+    quad(xPos, yPos, xPos + 2, yPos +2, xOld +2, yOld +2, xOld, yOld);
     strokeWeight(strokeVar/2);
     stroke((abs(yVel) + abs(xVel))*4,8,0);
     line(xPos, yPos, xOld, yOld);

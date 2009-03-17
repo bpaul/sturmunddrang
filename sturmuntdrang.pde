@@ -1,3 +1,5 @@
+
+
 // Set the font and its size (in units of pixels) 
 
 int xWidth = 1280, yHeight = 720;
@@ -5,20 +7,25 @@ int xWidth = 1280, yHeight = 720;
 int total = 1000;
 Jumble jumble;
 Shoal shoal;
+Sound sound;
 
 boolean clear = true;
 boolean click = false;
+boolean soundOn = false;
 
 int counter = 0;
 int strokeVar = 2;
 
-boolean makeMovie = false;
+boolean makeMovie = true;
 boolean useCamera = false;
 import processing.video.*;
 
 MovieMaker mm;
 
 void setup() {
+  // start the sound
+  sound = new Sound();
+  sound.init(this);
 
   size(xWidth,yHeight);
   //size(1280,720);
@@ -48,6 +55,8 @@ void draw() {
   if(keyPressed) { 
     if (key == '1') { 
       strokeVar = 1;
+    } else    if (key == 's') { 
+      soundOn = !soundOn;
     } else if (key == '2') {
       strokeVar = 2;
     } else if (key == '3') {
@@ -81,7 +90,10 @@ void drawState(){
     noStroke();
     fill(0);
     rect(0,0,width,height);
-  }
+    if (soundOn)
+      fill(50,  50*sound.level(), 50*sound.level());
+    ellipse(width/2, height/2, width, height/2);
+   }
 }
 
 void keyReleased () {
