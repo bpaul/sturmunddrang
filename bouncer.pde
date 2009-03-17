@@ -25,7 +25,7 @@ class Bouncer {
     yVel = yv;
   }
 
-  void bounce () {
+  void bounce (Shoal shoal) {
     x2Old = xOld;
     y2Old = yOld;
     xOld = xPos;
@@ -109,15 +109,23 @@ class Bouncer {
       yVel = yVel - ((yVel - newYVel) * .05f);
     }
     
+    PVector fishHealth = shoal.healthAtPoint(new PVector(int(xPos),int(yPos)));
+    if (fishHealth.x != 0 || fishHealth.y != 0) {
+       xVel += fishHealth.x/10;
+      yVel += fishHealth.y/10; 
+    }
 
+    float gray = (abs(yVel) + abs(xVel));
+    if (gray > 0)      gray = 255;
     strokeWeight(strokeVar);
-    stroke((abs(yVel) + abs(xVel))*2);
-    line(xPos, yPos, xOld, yOld);
+    stroke(gray, gray/2, 31);
+    //line(xPos, yPos, xOld, yOld);
+    quad(xPos, yPos, xPos + 2, yPos +2, xOld, yOld, xOld +2, yOld +2);
     strokeWeight(strokeVar/2);
-    stroke((abs(yVel) + abs(xVel))*4,0,0);
+    stroke((abs(yVel) + abs(xVel))*4,8,0);
     line(xPos, yPos, xOld, yOld);
     strokeWeight(strokeVar/4);
-    stroke((abs(yVel) + abs(xVel))*16,0,0);
+    stroke((abs(yVel) + abs(xVel))*16,68,30);
     line(xOld, yOld, x2Old, y2Old);
   }
 }

@@ -9,10 +9,10 @@ class Jumble {
     bouncers = new ArrayList(); // Initialize the arraylist
   }
 
-  void run() {
+  void run(Shoal shoal) {
     for (int i = 0; i < bouncers.size(); i++) {
       Bouncer b = (Bouncer) bouncers.get(i);  
-      b.bounce();  
+      b.bounce(shoal);  
     }
   }
 

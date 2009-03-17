@@ -84,7 +84,7 @@ class Fish {
   }
   
   void render() {
-    // Draw a triangle rotated in the direction of velocity
+    // Draw an ellipse rotated in the direction of velocity and sized an colored according to health
     float theta = vel.heading2D() + PI/2;
     float rsize = r + health/2;
     fill(102, 102, health*10);
@@ -92,11 +92,6 @@ class Fish {
     pushMatrix();
     translate(loc.x,loc.y);
     rotate(theta);
-//    beginShape(TRIANGLES);
-//    vertex(0, -rsize);
-//    vertex(-rsize, rsize+r);
-//    vertex(rsize, rsize+r);
-//    endShape();
     ellipse(0,0, rsize, rsize*2);
     popMatrix();
   }
@@ -107,6 +102,19 @@ class Fish {
     if (loc.y < -r) loc.y = height+r;
     if (loc.x > width+r) loc.x = -r;
     if (loc.y > height+r) loc.y = -r;
+  }
+
+  PVector healthAtPoint(PVector hloc)
+  {
+    PVector hvec = new PVector(0,0,0);
+    float neighbordist = 25.0;
+    float d = loc.dist(hloc);
+    if ((d > 0) && (d < neighbordist)) {
+      hvec = vel.get();
+      hvec.mult(health/sq(d));
+    }
+    
+    return hvec;
   }
 
   // Separation

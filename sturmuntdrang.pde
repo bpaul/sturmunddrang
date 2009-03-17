@@ -20,7 +20,7 @@ MovieMaker mm;
 
 void setup() {
 
-  size(900,500);
+  size(xWidth,yHeight);
   //size(1280,720);
   noStroke();
   fill(100);
@@ -65,7 +65,7 @@ void draw() {
   
   shoal.run();
 
-  jumble.run();
+  jumble.run(shoal);
   
   // Add window's pixels to movie
   if (makeMovie) mm.addFrame();
@@ -79,7 +79,7 @@ void mouseReleased () {
 void drawState(){
   if (clear){
     noStroke();
-    fill(100);
+    fill(0);
     rect(0,0,width,height);
   }
 }
