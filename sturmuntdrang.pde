@@ -1,22 +1,25 @@
+import processing.opengl.*;
+
 
 
 // Set the font and its size (in units of pixels) 
 
-int xWidth = 1280, yHeight = 720;
+int xWidth = 1024, yHeight = 768;
 
 int total = 1000;
 Jumble jumble;
 Shoal shoal;
 Sound sound;
+PImage backgroundImage, backgroundImage2;
 
-boolean clear = true;
+boolean clear = false;
 boolean click = false;
 boolean soundOn = false;
-
+float index = 0;
 int counter = 0;
 int strokeVar = 2;
 
-boolean makeMovie = true;
+boolean makeMovie = false;
 boolean useCamera = false;
 import processing.video.*;
 
@@ -27,21 +30,23 @@ void setup() {
   sound = new Sound();
   sound.init(this);
 
-  size(xWidth,yHeight);
+  size(xWidth,yHeight, JAVA2D);
   //size(1280,720);
   noStroke();
   fill(100);
   rect(0,0,width,height);
-
+  backgroundImage = loadImage("background4.png");
+  backgroundImage2 = loadImage("background2.png");
+  
   jumble = new Jumble();
   for (int i=0; i<total; i++){
-    jumble.addBouncer(new Bouncer(width/2, height/2 + random(-5,5), random(-75,75), random(-2,2), random(-2,2)));
+    jumble.addBouncer(new Bouncer(width/2, height/2 + random(-50,50), random(-75,75), random(-2,2), random(-2,2)));
   }
   
   shoal = new Shoal();
   // Add an initial set of Fishs into the system
   for (int i = 0; i < 150; i++) {
-    shoal.addFish(new Fish(new PVector(width/2,height/2),2.0,0.05));
+    shoal.addFish(new Fish(new PVector(width*random(1),height*noise(i)),2.0+1.0*noise(i),0.05+0.025*noise(i)));
   }
   //smooth();
     // Save compressed
@@ -52,6 +57,15 @@ void setup() {
  
 void draw() {
   drawState();
+  
+  float tinter = 126 * noise(index++);
+  float xer, yer;
+  tint(255, 255, 255, 126);
+  image(backgroundImage2, 0, 0);
+  tint(200+tinter, 200+tinter, 200+tinter, 126);
+  image(backgroundImage, 0, 0);
+
+  
   if(keyPressed) { 
     if (key == '1') { 
       strokeVar = 1;
@@ -75,7 +89,10 @@ void draw() {
   shoal.run();
 
   jumble.run(shoal);
-  
+
+  xer = 63 - tinter;
+  yer = 63 - (126 * random(1));
+  //tint(255, 255, 255, 200);
   // Add window's pixels to movie
   if (makeMovie) mm.addFrame();
 

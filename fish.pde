@@ -9,6 +9,7 @@ class Fish {
   float maxforce;    // Maximum steering force
   float maxspeed;    // Maximum speed
   int health;
+  float tailpos;
 
   Fish(PVector l, float ms, float mf) {
     acc = new PVector(0,0);
@@ -18,6 +19,7 @@ class Fish {
     maxspeed = ms;
     maxforce = mf;
     health = 0;
+    tailpos = 0;
   }
   
   void run(ArrayList fishes) {
@@ -51,6 +53,10 @@ class Fish {
     loc.add(vel);
     // Reset accelertion to 0 each cycle
     acc.mult(0);
+    
+    // do the tail
+    tailpos = noise(vel.x, vel.y, vel.z)*-10;
+    tailpos = tailpos + 5;
   }
 
   void seek(PVector target) {
@@ -88,11 +94,14 @@ class Fish {
     float theta = vel.heading2D() + PI/2;
     float rsize = r + health/2;
     fill(102, 102, health*10);
-    stroke(200, 100, health*10);
+    float outline = 100 + 100* noise(loc.x, loc.y);
+    stroke(outline, outline/2, health*100);
     pushMatrix();
     translate(loc.x,loc.y);
     rotate(theta);
     ellipse(0,0, rsize, rsize*2);
+    triangle(0,rsize, 2, rsize*2, -2, rsize*2);
+    line(0, rsize*2, tailpos, rsize*3);
     popMatrix();
   }
   
@@ -111,7 +120,7 @@ class Fish {
     float d = loc.dist(hloc);
     if ((d > 0) && (d < neighbordist)) {
       hvec = vel.get();
-      hvec.mult(health/sq(d));
+      hvec.mult(health/(d));
     }
     
     return hvec;
@@ -174,6 +183,20 @@ class Fish {
     PVector sum = new PVector(0,0);   // Start with empty vector to accumulate all locations
     int count = 0;
     health = 0;
+    float mouseInf = 100;
+    
+    PVector mouseV = new PVector(mouseX, mouseY);
+    if (loc.dist(mouseV) < mouseInf && loc.dist(mouseV) > 15) {
+    for (int i = 0 ; i < fishes.size(); i++) {
+      Fish other = (Fish) fishes.get(i);
+      float d = loc.dist(other.loc);
+      if ((d > 0) && (d < neighbordist)) {
+        health++;
+      }
+    }
+    return steer (mouseV, false);
+    }
+    else { 
     for (int i = 0 ; i < fishes.size(); i++) {
       Fish other = (Fish) fishes.get(i);
       float d = loc.dist(other.loc);
@@ -185,9 +208,11 @@ class Fish {
         health++;
       }
     }
+    
     if (count > 0) {
       sum.div((float)count);
       return steer(sum,false);  // Steer towards the location
+    }
     }
     return sum;
   }
