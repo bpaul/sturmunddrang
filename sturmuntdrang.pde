@@ -17,7 +17,7 @@ boolean click = false;
 boolean soundOn = false;
 float index = 0;
 int counter = 0;
-int strokeVar = 2;
+int strokeVar = 5;
 
 boolean makeMovie = false;
 boolean useCamera = false;
@@ -35,18 +35,18 @@ void setup() {
   noStroke();
   fill(100);
   rect(0,0,width,height);
-  backgroundImage = loadImage("background4.png");
+  backgroundImage = loadImage("background5.gif");
   backgroundImage2 = loadImage("background2.png");
   
   jumble = new Jumble();
   for (int i=0; i<total; i++){
-    jumble.addBouncer(new Bouncer(width/2, height/2 + random(-50,50), random(-75,75), random(-2,2), random(-2,2)));
+    jumble.addBouncer(new Bouncer(random(width), height/2 + random(-50,50), random(-75,75), random(-2,2), random(-2,2)));
   }
   
   shoal = new Shoal();
   // Add an initial set of Fishs into the system
   for (int i = 0; i < 150; i++) {
-    shoal.addFish(new Fish(new PVector(width*random(1),height*noise(i)),2.0+1.0*noise(i),0.05+0.025*noise(i)));
+    shoal.addFish(new Fish(new PVector(width*random(1),height*noise(i)),2.0+2.0*noise(i),0.05+0.025*noise(i)));
   }
   //smooth();
     // Save compressed
@@ -58,11 +58,11 @@ void setup() {
 void draw() {
   drawState();
   
-  float tinter = 126 * noise(index++);
+  float tinter = 255 * noise(index++);
   float xer, yer;
-  tint(255, 255, 255, 126);
-  image(backgroundImage2, 0, 0);
-  tint(200+tinter, 200+tinter, 200+tinter, 126);
+  //tint(255, 255, 255, 126);
+  //image(backgroundImage2, 0, 0);
+  //tint(200+tinter, 200+tinter, 200+tinter, 255);
   image(backgroundImage, 0, 0);
 
   
