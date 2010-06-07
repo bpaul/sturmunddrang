@@ -15,10 +15,10 @@ class Fish {
     acc = new PVector(0,0);
     vel = new PVector(random(-1,1),random(-1,1));
     loc = l.get();
-    r = 2.0;
+    r = 3.0+random(-1,1);
     maxspeed = ms;
     maxforce = mf;
-    health = 0;
+    health = 1;
     tailpos = 0;
   }
   
@@ -34,14 +34,19 @@ class Fish {
     PVector sep = separate(fishes);   // Separation
     PVector ali = align(fishes);      // Alignment
     PVector coh = cohesion(fishes);   // Cohesion
+    PVector bds = bounds();
+    
     // Arbitrarily weight these forces
-    sep.mult(2.0);
+    sep.mult(3.0);
     ali.mult(1.0);
     coh.mult(1.0);
+    bds.mult(1.5);
+    
     // Add the force vectors to acceleration
     acc.add(sep);
     acc.add(ali);
     acc.add(coh);
+    acc.add(bds);
   }
   
   // Method to update location
@@ -92,7 +97,7 @@ class Fish {
   void render() {
     // Draw an ellipse rotated in the direction of velocity and sized an colored according to health
     float theta = vel.heading2D() + PI/2;
-    float rsize = r + health/2;
+    float rsize = r + health/3;
     fill(102, 102, health*10);
     float outline = 100 + 100* noise(loc.x, loc.y);
     stroke(outline, outline/2, health*100);
@@ -107,10 +112,10 @@ class Fish {
   
   // Wraparound
   void borders() {
-    if (loc.x < -r) loc.x = width+r;
-    if (loc.y < -r) loc.y = height+r;
-    if (loc.x > width+r) loc.x = -r;
-    if (loc.y > height+r) loc.y = -r;
+    if (loc.x < -r) vel.x = -vel.x;
+    if (loc.y < -r) vel.y = -vel.y;
+    if (loc.x > width+r) vel.x = -vel.x;
+    if (loc.y > height+r) vel.y = -vel.y;
   }
 
   PVector healthAtPoint(PVector hloc)
@@ -173,6 +178,29 @@ class Fish {
       sum.limit(maxforce);
     }
     return sum;
+  }
+
+  //bounds - be repelled by the boundries
+  PVector bounds() {
+    int gutter = 100;
+    PVector ret = new PVector(0,0);
+    if (loc.x < gutter) {
+      ret.x = sq(gutter-loc.x)/sq(gutter);
+    }
+    if (loc.x > width - gutter) {
+      ret.x = -sq((width - loc.x) -gutter)/sq(gutter);
+    }
+    
+    if (loc.y < gutter) {
+      ret.y = sq(gutter-loc.y)/sq(gutter);
+    }
+    if (loc.y > height - gutter) {
+      ret.y = -sq((height - loc.y) -gutter)/sq(gutter);
+    }
+    
+    ret.x = ret.x * noise(acc.x);
+    ret.y = ret.y * noise(acc.y);  
+    return ret;
   }
 
   // Cohesion
