@@ -18,8 +18,8 @@ class Bouncer {
   float yVel, newYVel;
   float xDelta, yDelta, distance;
   Bouncer (float xp, float yp, float rp, float xv, float yv) {
-    xPos = xp;
-    yPos = yp;
+    xPos = xOld = x2Old = xp;
+    yPos = yOld = y2Old = yp;
     rot = rp;
     xVel = xv;
     yVel = yv;
